@@ -7,10 +7,12 @@ from demo import animations
 from flipdot import client, display
 
 
-d = display.Display(28, 14,
+d = display.Display(56, 14,
                     panels={
                         2: ((0, 0), (28, 7)),
                         1: ((0, 7), (28, 7)),
+                        4: ((28, 0), (28, 7)),
+                        3: ((28, 7), (28, 7))
                     })
 
 

@@ -20,7 +20,7 @@ from PIL import Image
 import display
 
 
-RefreshRate = 0.2
+RefreshRate = 0.1
 sim = None
 stdscr = None
 
@@ -151,11 +151,13 @@ def stop_curses():
 
 
 if __name__ == "__main__":
-    sim = DisplaySim(28, 14,
+    sim = DisplaySim(56, 14,
                      panels={
-                         2: ((0, 0), (28, 7)),
-                         1: ((0, 7), (28, 7)),
-                        })
+                        2: ((0, 0), (28, 7)),
+                        1: ((0, 7), (28, 7)),
+                        4: ((28, 0), (28, 7)),
+                        3: ((28, 7), (28, 7))
+                    })
     try:
         init_curses()
         sim.start()
