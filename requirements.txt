@@ -1,3 +1,3 @@
-pillow
-pyserial
-ephem
+pillow>=10
+pyserial>=3.5
+ephem>=4.1

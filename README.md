@@ -86,8 +86,8 @@ cycling through headlines derived from [Flipboard](https://about.flipboard.com/)
 ## Develop
 
 See the `demo.py` file for examples, but in general, anything that can be written to
-a Python Imaging Library 1-bit image can be sent to the display. The code should be
-fine on Python 2.7.X and Python 3.6.X.
+a Python Imaging Library 1-bit image can be sent to the display. The code needs
+Python 3.9+ and Pillow 10+ (last tested on Python 3.13 and Pillow 12).
 
 ### License
 
