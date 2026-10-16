@@ -412,6 +412,95 @@ def curtain(d):
         time.sleep(0.1)
 
 
+#
+# mooninites: Ignignokt (left) and Err (right)
+#
+
+IGNIGNOKT = [
+    ".#######.",
+    "#########",
+    "#.#####.#",
+    "#...#...#",
+    "#########",
+    "##.....##",
+    ".#######.",
+    "...###...",
+    ".#######.",
+    "#..###..#",
+    "...#.#...",
+]
+
+ERR = [
+    ".#######.",
+    "#########",
+    "##.###.##",
+    "#########",
+    "###...###",
+    ".#######.",
+    "...###...",
+    ".#######.",
+    "#..#.#..#",
+]
+
+MOONINITE_LEGS = ["..#...#..", "...#.#..."]
+
+
+def draw_sprite(draw, sprite, x, y):
+    for r, row in enumerate(sprite):
+        for c, ch in enumerate(row):
+            if ch == "#":
+                draw.point((x + c, y + r))
+
+
+def mooninite_frame(d, ign_x, err_x, step=0, ign_dy=0, err_dy=0):
+    w, h = d.im.size
+    d.reset()
+    draw = ImageDraw.Draw(d.im)
+    legs = [MOONINITE_LEGS[step % 2]]
+    draw_sprite(draw, IGNIGNOKT + legs, ign_x, h - len(IGNIGNOKT) - 1 - ign_dy)
+    draw_sprite(draw, ERR + legs, err_x, h - len(ERR) - 1 - err_dy)
+    del draw
+    d.send()
+
+
+def mooninites(d):
+    """
+    Ignignokt and Err walk in, take turns hopping, flash the display, and walk off
+    """
+    w, h = d.im.size
+    ign_home = w // 2 - 16
+    err_home = w - 9 - ign_home
+    steps = ign_home + 9
+
+    for i in range(1, steps + 1):
+        mooninite_frame(d, ign_home - steps + i, err_home + steps - i, step=i // 2)
+        time.sleep(0.12)
+    time.sleep(0.8)
+
+    for who in ("ign", "err", "both"):
+        for dy in (1, 2, 2, 1, 0):
+            ign_dy = dy if who != "err" else 0
+            err_dy = dy if who != "ign" else 0
+            mooninite_frame(d, ign_home, err_home, 1, ign_dy, err_dy)
+            time.sleep(0.07)
+        time.sleep(0.4)
+
+    for _ in range(4):
+        d.im = d.im.point(lambda x: 255 - x)
+        d.send()
+        time.sleep(0.25)
+    time.sleep(0.6)
+
+    for i in range(1, steps + 1):
+        mooninite_frame(d, ign_home - i, err_home + i, step=i // 2)
+        time.sleep(0.12)
+
+
+def mooninites_scroll(d):
+    mooninites(d)
+    scroll_text(d, "WE ARE THE MOONINITES")
+
+
 transitions = [
     dot,
     alien_1,
@@ -420,6 +509,7 @@ transitions = [
     wipe_right,
     wipe_down,
     gobble,
+    mooninites,
 ]
 # transitions = [dot]
 random.shuffle(transitions)
