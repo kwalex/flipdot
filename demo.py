@@ -21,18 +21,16 @@ def transition(d):
 
 
 def mainloop(d):
-    # animations.black(d)
-    # time.sleep(0.5)
-    # animations.white(d)
-    # time.sleep(0.50)
+    animations.black(d)
+    time.sleep(0.5)
+    animations.white(d)
+    time.sleep(50)
     # for i in range(0, 10):
     #     animations.john4(d)
     # animations.infodense(d, 120)
-    animations.clock(d, 10, font=animations.MassiveFont, offset=-3)
-    # animations.white(d)
-    # time.sleep(2)
-    # animations.black(d)
-    # time.sleep(1)
+    animations.clock(d, 120, font=animations.MassiveFont)
+    # animations.clock_with_secs(d, 120, font=animations.MassiveFont, offset=-3)
+
 
     # animations.scroll_text(d, "BIG SCROLL", font=animations.BigFont)
     # transition(d)

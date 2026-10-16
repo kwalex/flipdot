@@ -79,7 +79,7 @@ def display_text(d, text, font=SmallFont, offset=0, final=True):
     w, h = d.im.size
     draw = ImageDraw.Draw(d.im)
     tw, th = draw.textsize(text, font=font)
-    shift = 0 if font == BigFont else -3
+    shift = 0 if font == BigFont or font == MassiveFont else -3
     if offset != 0:
         shift -= offset
     d.reset()
@@ -97,13 +97,26 @@ def blink_text(d, text, n=3):
         d.send()
         time.sleep(0.5)
 
-
-def clock(d, duration=10, blink=True, font=BigFont, offset=0):
+def clock(d, duration=10, font=MassiveFont):
     w, h = d.im.size
-    draw = ImageDraw.Draw(d.im)
+    
     start = time.time()
     now = start
     while now < (start + duration):
+        now = time.time()
+
+        display_text(d, time.strftime("%H%M"), font=font)
+
+        d.send()
+        time.sleep(0.1)
+
+def clock_with_secs(d, duration=10, blink=True, font=BigFont, offset=0):
+    w, h = d.im.size
+    
+    start = time.time()
+    now = start
+    while now < (start + duration):
+        draw = ImageDraw.Draw(d.im)
         now = time.time()
 
         main_text = time.strftime("%H%M")
@@ -146,10 +159,12 @@ def clock(d, duration=10, blink=True, font=BigFont, offset=0):
             )
 
             # Show dot
-            draw.point((w - 2, 1))
+            draw.point((w - 3, 2))
+
+            del draw
 
             # Invert for last 5 seconds of minute
-            if time.localtime().tm_sec > 54:
+            if time.localtime().tm_sec > 55:
                 # Invert display
                 d.im = d.im.point(lambda x: 255 - x)
 
