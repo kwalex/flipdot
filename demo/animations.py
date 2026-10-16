@@ -62,10 +62,19 @@ def get_ephemera(city="New York"):
     return result
 
 
+def text_size(draw, text, font):
+    """
+    Width and height of text drawn at the origin, as the old ImageDraw.textsize
+    (removed in Pillow 10) reported them
+    """
+    _, _, w, h = draw.textbbox((0, 0), text, font=font)
+    return w, h
+
+
 def scroll_text(d, text, font=BigFont):
     w, h = d.im.size
     draw = ImageDraw.Draw(d.im)
-    tw, th = draw.textsize(text, font=font)
+    tw, th = text_size(draw, text, font)
     shift = 0 if font == BigFont else -2
     for x in range(w, 0 - tw, -1):
         d.reset()
@@ -78,7 +87,7 @@ def scroll_text(d, text, font=BigFont):
 def display_text(d, text, font=SmallFont, offset=0, final=True):
     w, h = d.im.size
     draw = ImageDraw.Draw(d.im)
-    tw, th = draw.textsize(text, font=font)
+    tw, th = text_size(draw, text, font)
     shift = 0 if font == BigFont or font == MassiveFont else -3
     if offset != 0:
         shift -= offset
@@ -122,12 +131,12 @@ def clock_with_secs(d, duration=10, blink=True, font=BigFont, offset=0):
         main_text = time.strftime("%H%M")
         sec_text = time.strftime("%S")
 
-        main_w, main_h = draw.textsize(main_text, font=font)
+        main_w, main_h = text_size(draw, main_text, font)
 
         # We'll force a single column between each second character, so calc the width digit by digit
         sec_w = sec_h = 0
         for letter in sec_text:
-            char_w, char_h = draw.textsize(letter, SmallFont)
+            char_w, char_h = text_size(draw, letter, SmallFont)
             sec_w += char_w + 1
             sec_h += char_h
 
@@ -192,7 +201,7 @@ def infodense(d, duration=120, ephem_duration=5, blink=True):
         d.reset()
 
         # Draw hour, big and aligned to left edge
-        tw, th = draw.textsize(hour, font=BigFont)
+        tw, th = text_size(draw, hour, BigFont)
         draw.text((-1, h), hour, font=BigFont, anchor="lb")
 
         # Store current column at right edge of time
@@ -206,7 +215,7 @@ def infodense(d, duration=120, ephem_duration=5, blink=True):
         current_col += 1
 
         # Draw minute, big and aligned to current_col
-        tw, th = draw.textsize(minute, font=BigFont)
+        tw, th = text_size(draw, minute, BigFont)
         draw.text((current_col - 1, h), minute, font=BigFont, anchor="lb")
 
         current_col += tw
@@ -224,7 +233,7 @@ def infodense(d, duration=120, ephem_duration=5, blink=True):
             d.im.paste(head, (31, 0))
         else:
             text_by_letter(d, eph_name, SmallFont, (current_col - 1, (h / 2)))
-            # tw, th = draw.textsize(eph_name, font=SmallFont)
+            # tw, th = text_size(draw, eph_name, SmallFont)
             # draw.text((current_col, (h / 2)), eph_name, font=SmallFont, anchor="lb")
 
         # Draw ephemera value
@@ -244,7 +253,7 @@ def text_by_letter(d, text, font, coords, colspace=-1, anchor="lb"):
     x, y = coords
     draw = ImageDraw.Draw(d.im)
     for char in text:
-        tw, th = draw.textsize(char, font=font)
+        tw, th = text_size(draw, char, font)
         draw.text((x, y), char, font=font, anchor=anchor)
         x = x + tw + colspace
 

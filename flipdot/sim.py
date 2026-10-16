@@ -125,7 +125,7 @@ class DisplaySim(threading.Thread):
         # update the internal image from the given list of bytes
         (xs, ys), (w, h) = self.d.panels[address]
         n = Image.new("RGB", (w, h))
-        if h is not 7:
+        if h != 7:
             print("H is not 7!!!")
         for x in range(w):
             # get the next byte

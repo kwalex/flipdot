@@ -76,7 +76,7 @@ class Display(object):
         (xs, ys), (w, h) = self.panels[address]
         result = bytearray()
         for x in range(xs, xs + w):
-            if h is not 7:
+            if h != 7:
                 print("H is not 7!!!!")
             b = 0
             for y in range(h-1, -1, -1):
